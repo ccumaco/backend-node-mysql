@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use(require('./routes/maestros'));
+app.use(require('./routes/comercios'));
 
 // Starting the server
 app.listen(app.get('port'), () => {
