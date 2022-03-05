@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const CategoriasModel = require('./models/Categorias')
 const ComercioModel = require('./models/Comercios')
+const UsuariosModel = require('./models/Usuarios')
 const sequelize = new Sequelize('comercios', 'root', '', {
     host: 'localhost',
     dialect: 'mysql'
@@ -8,6 +9,7 @@ const sequelize = new Sequelize('comercios', 'root', '', {
 
 const Categorias = CategoriasModel(sequelize, Sequelize)
 const Comercios = ComercioModel(sequelize, Sequelize)
+const Usuarios = UsuariosModel(sequelize, Sequelize)
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -17,5 +19,6 @@ sequelize.sync({ force: false })
 
 module.exports = {
     Categorias,
-    Comercios
+    Comercios,
+    Usuarios
 }
