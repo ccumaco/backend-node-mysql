@@ -1,75 +1,55 @@
 const express = require('express');
 const router = express.Router();
-
-const mysqlConnection = require('../../database.js');
-
-
-router.get('/get-commerces', (req, res) => {
-  mysqlConnection.query('SELECT * FROM comercios', (err, rows, fields) => {
-    if (!err) {
-      res.json(rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-// GET An comercios
-router.get('/commerce/:idcomercio', (req, res) => {
-  const { idcomercio } = req.params;
-  mysqlConnection.query('SELECT * FROM comercios WHERE idcomercio = ?', [idcomercio], (err, rows, fields) => {
-    if (!err) {
-      res.json(rows[0]);
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-// DELETE An comercios
-router.delete('/delete/:idcomercio', (req, res) => {
-  const { idcomercio } = req.params;
-  mysqlConnection.query('DELETE FROM comercios WHERE idcomercio = ?', [idcomercio], (err, rows, fields) => {
-    if (!err) {
-      res.json({ status: 'comercio eliminado con el id:' + idcomercio });
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-// INSERT An comercios
-router.post('/create-commerce', (req, res) => {
-  const { idcomercio, nombre,  descripcion, active, promotion, calificacion, image } = req.body;
-  const query = `
-  INSERT INTO comercios.comercios (idcomercio, nombre, descripcion,active,promotion,calificacion, image)  values( ?, ?, ?, ?, ?, ?,? );
-  `;
-  mysqlConnection.query(query, [idcomercio, nombre,  descripcion, active, promotion, calificacion, image], (err, rows, fields) => {
-    if (!err) {
-      res.json({ status: 'comercio creado con el id:' + req.body.idcomercio });
-    } else {
-      console.log(err);
-    }
-  });
-
-});
+const { Comercios } = require('./../../database');
 
 
+// GET all comercios
+router.get('/', async (req, res) => {
+  const comercios = await Comercios.findAll();
+  res.json(comercios);
+})
+
+// crear comercio
+router.post('/', (req, res) => {
+  const comercios = Comercios.create(req.body);
+  res.json(comercios);
+})
 
 
+//comercio por id
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const comercio = await Comercios.findByPk(id);
+  if (comercio) {
+    res.json(comercio);
+  } else {
+    res.json({ message: 'No se encontro la categoria' });
+  }
+})
+
+// actualizar comercio
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const comercios = await Comercios.findByPk(id);
+  if (comercios) {
+    const { nombre, descripcion, active, promotion, calificacion, image } = req.body;
+    const updated = await comercios.update({ nombre, descripcion, active, promotion, calificacion, image });
+    res.json(updated);
+  } else {
+    res.json({ message: 'No se encontro la comercio' });
+  }
+})
 
 
-router.put('/commerce/:idcomercio', (req, res) => {
-  const { nombre, usuario_id, descripcion, active, promotion, calificacion, image } = req.body;
-  const { idcomercio } = req.params;
-  const query = `UPDATE comercios SET nombre = ?, usuario_id = ?, descripcion = ?, active = ?, promotion = ?, calificacion = ?, image =?, WHERE idcomercio = ?`;
-  mysqlConnection.query(query, [nombre, usuario_id, descripcion, active, promotion, calificacion, image, idcomercio], (err, rows, fields) => {
-    if (!err) {
-      res.json({ status: 'comercio actualizado con el id' + idcomercio });
-    } else {
-      res.json({ status: 'error' });
-    }
-  });
-});
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const comercios = await Comercios.findByPk(id);
+  if (comercios) {
+    const deleted = await comercios.destroy();
+    res.json(deleted);
+  } else {
+    res.json({ message: 'No se encontro la comercio' });
+  }
+})
 
 module.exports = router;
