@@ -5,6 +5,7 @@ const { Categorias } = require('./../../database');
 
 // GET all comercios
 router.get('/', async (req, res) => {
+  // console.log(req);
   const categorias = await Categorias.findAll();
   res.json(categorias);
 })
@@ -22,6 +23,7 @@ router.get('/:id', async (req, res) => {
 
 // crear comercio
 router.post('/', (req, res) => {
+  
   const categorias = Categorias.create(req.body);
   res.json(categorias);
 })

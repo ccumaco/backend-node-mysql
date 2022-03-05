@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const { Usuarios } = require('./../../database');
+const moment = require('moment');
+const jwt = require('jwt-simple');
 const { check, validationResult } = require('express-validator');
 
 
@@ -18,4 +20,27 @@ router.post('/registro', [
     const usuario = await Usuarios.create(req.body);
     res.json(usuario);
 })
+
+
+
+router.post('/login', async (req, res) => {
+    const user = await Usuarios.findOne({where: {email: req.body.email}})
+    if (!user) {
+        return res.status(400).json({msg: 'El usuario no existe'})
+    }
+    const validPass = bcrypt.compareSync(req.body.password, user.password);
+    if (validPass) {
+        return res.json({success: crearToken(user)});
+    }
+})
+
+
+const crearToken = (user)=> {
+    const payload = {
+        idusuario: user.idusuario,
+        createAt: moment().unix(),
+        expireAt: moment().add(5, 'minutes').unix()
+    }
+    return jwt.encode(payload, 'frase secreta');
+}
 module.exports = router;

@@ -33,6 +33,7 @@ module.exports = (sequelize, type) => {
         },
         imagen: {
             type: Sequelize.STRING,
+            defaultValue: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZmlsZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60',
             allowNull: false
         },
         active: {

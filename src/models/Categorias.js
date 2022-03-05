@@ -25,6 +25,7 @@ module.exports = (sequelize, type) => {
         },
         imagen: {
             type: Sequelize.STRING,
+            defaultValue: 'https://media.istockphoto.com/photos/closeup-on-an-automated-security-system-at-a-house-picture-id1325947414?b=1&k=20&m=1325947414&s=170667a&w=0&h=RXFQ-YYykVjMtzDu6vAzDvnXDS54YuKr0J24OO1PArU=',
             allowNull: false
         }
 
