@@ -1,20 +1,18 @@
-const mysql = require('mysql');
-
-const mysqlConnection = mysql.createConnection({
+const Sequelize = require('sequelize')
+const CategoriasModel = require('./models/Categorias')
+const sequelize = new Sequelize('comercios', 'root', '', {
     host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'comercios'
-});
-
-
-mysqlConnection.connect( function(err){
-    if(err){
-        console.log(err);
-        return
-    } else{
-        console.log('db is conected');
-    }
+    dialect: 'mysql'
 })
 
-module.exports = mysqlConnection;
+const Categorias = CategoriasModel(sequelize, Sequelize)
+
+sequelize.sync({ force: false })
+    .then(() => {
+        console.log('Categorias table created')
+    })
+    .catch(err => console.log(err))
+
+module.exports = {
+    Categorias
+}
