@@ -5,7 +5,6 @@ const { Categorias } = require('./../../database');
 
 // GET all comercios
 router.get('/', async (req, res) => {
-  // console.log(req);
   const categorias = await Categorias.findAll();
   res.json(categorias);
 })
